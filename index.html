@@ -30,6 +30,7 @@
       background: #dedede;
       overflow-y: auto;
       padding: 10px;
+      max-height: 456px;
     }
 
     pre {
@@ -64,7 +65,14 @@
   <h3>欢迎使用<a href="http://mockjs.com/examples.html" target="_blank">mock</a>数据可视化工具</h3>
   <div class="wrap">
     <!-- 文本输入框 -->
-    <textarea name="inputarea" cols="46" rows="30" placeholder="请输入mock.js语法格式的标准JSON（必须双引号）"></textarea>
+    <textarea name="inputarea" id="inputarea" cols="46" rows="30" placeholder="请输入mock.js语法格式的标准JSON（必须双引号）">
+      {
+        "example|6": [{
+          "name": "@cname",
+          "value":"@integer(1,100)"
+        }]
+      }
+    </textarea>
 
     <!-- 结果展示区域 -->
     <div id="json">
@@ -85,7 +93,7 @@
     let mockData
 
     // 监听文本域输入框
-    document.querySelector('[name="inputarea"]').addEventListener('change', e => {
+    document.querySelector('[name="inputarea"]').addEventListener('keyup', e => {
       if (e.target.value === '') {
         document.querySelector('#json pre').innerHTML = ''
       } else {
