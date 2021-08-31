@@ -20,6 +20,7 @@
     .wrap {
       display: flex;
       padding: 0px 50px;
+      position: relative;
     }
 
     textarea {
@@ -63,6 +64,16 @@
     .key {
       color: #3498DB;
     }
+
+    #copy {
+      position: absolute;
+      right: 85px;
+      bottom: 20px;
+    }
+
+    #copy:hover {
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -84,6 +95,8 @@
     <div id="json">
       <pre></pre>
     </div>
+
+    <button id="copy">复制</button>
   </div>
 
   <script>
@@ -138,6 +151,17 @@
         return '<span class="' + cls + '">' + match + '</span>';
       });
     }
+
+    // 实现一键复制功能
+    document.querySelector('#copy').addEventListener('click', () => {
+      // 使用textarea支持换行，使用input不支持换行
+      const textarea = document.createElement('textarea');
+      textarea.value = jsonBeforeHighlight;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    })
 
   </script>
 </body>
