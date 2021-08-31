@@ -4,12 +4,17 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
   <title>Mock数据照妖镜</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock-min.js"></script>
   <style>
     h3 {
       text-align: center
+    }
+
+    h3 a {
+      color: #16A085
     }
 
     .wrap {
@@ -27,7 +32,7 @@
 
     #json {
       flex-grow: 1;
-      background: #dedede;
+      background: #ECF0F1;
       overflow-y: auto;
       padding: 10px;
       max-height: 456px;
@@ -40,15 +45,15 @@
     }
 
     .string {
-      color: green;
+      color: #1ABC9C;
     }
 
     .number {
-      color: darkorange;
+      color: #E67E22;
     }
 
     .boolean {
-      color: blue;
+      color: #9B59B6;
     }
 
     .null {
@@ -56,20 +61,21 @@
     }
 
     .key {
-      color: red;
+      color: #3498DB;
     }
   </style>
 </head>
 
 <body>
-  <h3>欢迎使用<a href="http://mockjs.com/examples.html" target="_blank">mock</a>数据可视化工具</h3>
+  <h3>欢迎使用 <a href="http://mockjs.com/examples.html" target="_blank">mock</a> 数据可视化工具</h3>
   <div class="wrap">
     <!-- 文本输入框 -->
     <textarea name="inputarea" id="inputarea" cols="46" rows="30" placeholder="请输入mock.js语法格式的标准JSON（必须双引号）">
       {
         "example|6": [{
           "name": "@cname",
-          "value":"@integer(1,100)"
+          "sex":"@boolean",
+          "age":"@integer(1,100)"
         }]
       }
     </textarea>
@@ -83,35 +89,41 @@
   <script>
 
     // 模拟假数据示例，仅供参考，必须是双引号
-    Mock.mock({
-      "data|5": [{
-        "name": "@cname"
-      }]
-    })
-
-    // 新建一个框，什么都能装
-    let mockData
+    // Mock.mock({
+    //   "data|5": [{
+    //     "name": "@cname"
+    //   }]
+    // })
+    let jsonBeforeHighlight = '';
+    const leftInput = document.querySelector('[name="inputarea"]');
+    render(leftInput.innerHTML)
 
     // 监听文本域输入框
-    document.querySelector('[name="inputarea"]').addEventListener('keyup', e => {
+    leftInput.addEventListener('keyup', e => {
       if (e.target.value === '') {
         document.querySelector('#json pre').innerHTML = ''
       } else {
-        // 获取文本域输入的内容，解析成JSON对象，然后构建出mock数据
-        mockData = Mock.mock(JSON.parse(e.target.value))
-        // 字符化并格式化构建的mock数据
-        var result = JSON.stringify(mockData, null, 4)
-        // 将加工后的JSON字符串赋值给Pre节点
-        document.querySelector('#json pre').innerHTML = syntaxHighlight(result)
+        render(e.target.value)
       }
     })
+
+    function render(input) {
+      // 获取文本域输入的内容，解析成JSON对象，然后构建出mock数据
+      let mockData = Mock.mock(JSON.parse(input))
+      // 字符化并格式化构建的mock数据
+      let result = JSON.stringify(mockData, null, 4)
+      // 缓存中间态
+      jsonBeforeHighlight = result
+      // 将加工后的JSON字符串赋值给Pre节点
+      document.querySelector('#json pre').innerHTML = syntaxHighlight(result)
+    }
 
 
     // 为格式化后的JSON字符串，添加class类
     function syntaxHighlight(json) {
       json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
       return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, match => {
-        var cls = 'number';
+        let cls = 'number';
         if (/^"/.test(match)) {
           if (/:$/.test(match)) {
             cls = 'key';
